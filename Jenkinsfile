@@ -4,7 +4,9 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('student-management/student-management') {
+                // On se place dans le dossier où se trouve pom.xml
+                dir('student-management') {
+                    sh 'ls -l'                 // pour vérifier qu'on voit pom.xml
                     sh 'mvn clean compile'
                 }
             }
