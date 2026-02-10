@@ -1,16 +1,24 @@
 pipeline {
     agent any
+    tools {
+        jdk 'jdk17'
+    }
     stages {
+        stage('Debug Java') {
+            steps {
+                sh 'which java'
+                sh 'java -version'
+                sh 'which javac'
+                sh 'javac -version'
+            }
+        }
 
         stage('Build') {
             steps {
-                // On se place dans le dossier où se trouve pom.xml
                 dir('student-management') {
-                    sh 'ls -l'                 // pour vérifier qu'on voit pom.xml
                     sh 'mvn clean compile'
                 }
             }
         }
-
     }
 }
