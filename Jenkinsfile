@@ -11,7 +11,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('student-management/student-management') {
+                dir('student-management/student-management/student-management') {
                     sh 'mvn clean compile'
                 }
             }
