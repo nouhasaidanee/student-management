@@ -1,10 +1,9 @@
-
 pipeline {
     agent any
     stages {
         stage('Checkout') {
             steps {
-                githttps://github.com/nouhasaidanee/student-management/edit/main/Jenkinsfile.git'
+                git 'https://github.com/nouhasaidanee/student-management.git'
             }
         }
 
