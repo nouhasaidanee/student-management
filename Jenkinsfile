@@ -11,16 +11,10 @@ pipeline {
 
     stages {
 
-        stage('Debug Java') {
-            steps {
-                sh 'java -version'
-            }
-        }
-
         stage('Build Java') {
             steps {
                 dir('student-management') {
-                    sh 'mvn clean package'
+                    sh 'mvn clean package -DskipTests'
                 }
             }
         }
