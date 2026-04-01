@@ -19,11 +19,26 @@ pipeline {
             }
         }
 
-       stage('Build Docker Image') {
-    steps {
-        sh 'docker build -t $IMAGE_NAME -f Dockerfile student-management'
-    }
-}
+        stage('SonarQube Analysis') {
+            steps {
+                dir('student-management') {
+                    withSonarQubeEnv('sonarqube') {
+                        sh '''
+                        mvn sonar:sonar \
+                        -Dsonar.projectKey=student-management \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=$SONAR_AUTH_TOKEN
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME -f Dockerfile student-management'
+            }
+        }
 
         stage('Login DockerHub') {
             steps {
