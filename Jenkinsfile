@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         IMAGE_NAME = "nouhasd/student-management"
+        KUBECONFIG = "/root/.kube/config"
     }
     stages {
         stage('Build Java') {
@@ -50,21 +51,21 @@ pipeline {
             }
         }
         stage('Kubernetes Deploy') {
-    steps {
-        sh 'kubectl apply -f pv-sql.yaml --validate=false'
-        sh 'kubectl apply -f pvc-sql.yaml --validate=false'
-        sh 'kubectl apply -f deploy-sql.yaml --validate=false'
-        sh 'kubectl apply -f service-sql.yaml --validate=false'
-        sh 'kubectl apply -f configmap-spring.yaml --validate=false'
-        sh 'kubectl apply -f secret-spring.yaml --validate=false'
-        sh 'kubectl apply -f deploy-spring.yaml --validate=false'
-        sh 'kubectl apply -f service-spring.yaml --validate=false'
-    }
-}
+            steps {
+                sh 'kubectl --kubeconfig=/root/.kube/config apply -f pv-sql.yaml --validate=false'
+                sh 'kubectl --kubeconfig=/root/.kube/config apply -f pvc-sql.yaml --validate=false'
+                sh 'kubectl --kubeconfig=/root/.kube/config apply -f deploy-sql.yaml --validate=false'
+                sh 'kubectl --kubeconfig=/root/.kube/config apply -f service-sql.yaml --validate=false'
+                sh 'kubectl --kubeconfig=/root/.kube/config apply -f configmap-spring.yaml --validate=false'
+                sh 'kubectl --kubeconfig=/root/.kube/config apply -f secret-spring.yaml --validate=false'
+                sh 'kubectl --kubeconfig=/root/.kube/config apply -f deploy-spring.yaml --validate=false'
+                sh 'kubectl --kubeconfig=/root/.kube/config apply -f service-spring.yaml --validate=false'
+            }
+        }
         stage('Deploy MySQL & Spring Boot on K8s') {
             steps {
-                sh 'kubectl rollout status deployment/mysql-deployment -n devops'
-                sh 'kubectl rollout status deployment/spring-app-deployment -n devops'
+                sh 'kubectl --kubeconfig=/root/.kube/config rollout status deployment/mysql-deployment -n devops'
+                sh 'kubectl --kubeconfig=/root/.kube/config rollout status deployment/spring-app-deployment -n devops'
             }
         }
     }
