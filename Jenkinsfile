@@ -1,16 +1,12 @@
 pipeline {
     agent any
-
     tools {
         jdk 'jdk17'
     }
-
     environment {
         IMAGE_NAME = "nouhasd/student-management"
     }
-
     stages {
-
         stage('Build Java') {
             steps {
                 dir('student-management') {
@@ -18,7 +14,6 @@ pipeline {
                 }
             }
         }
-
         stage('SonarQube Analysis') {
             steps {
                 dir('student-management') {
@@ -33,13 +28,11 @@ pipeline {
                 }
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $IMAGE_NAME -f Dockerfile student-management'
             }
         }
-
         stage('Login DockerHub') {
             steps {
                 withCredentials([usernamePassword(
@@ -51,10 +44,27 @@ pipeline {
                 }
             }
         }
-
         stage('Push Docker Image') {
             steps {
                 sh 'docker push $IMAGE_NAME'
+            }
+        }
+        stage('Kubernetes Deploy') {
+            steps {
+                sh 'kubectl apply -f k8s/pv-sql.yaml'
+                sh 'kubectl apply -f k8s/pvc-sql.yaml'
+                sh 'kubectl apply -f k8s/deploy-sql.yaml'
+                sh 'kubectl apply -f k8s/service-sql.yaml'
+                sh 'kubectl apply -f k8s/configmap-spring.yaml'
+                sh 'kubectl apply -f k8s/secret-spring.yaml'
+                sh 'kubectl apply -f k8s/deploy-spring.yaml'
+                sh 'kubectl apply -f k8s/service-spring.yaml'
+            }
+        }
+        stage('Deploy MySQL & Spring Boot on K8s') {
+            steps {
+                sh 'kubectl rollout status deployment/mysql-deployment -n devops'
+                sh 'kubectl rollout status deployment/spring-app-deployment -n devops'
             }
         }
     }
