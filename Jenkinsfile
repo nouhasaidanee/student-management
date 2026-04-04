@@ -51,14 +51,14 @@ pipeline {
         }
         stage('Kubernetes Deploy') {
             steps {
-                sh 'kubectl apply -f k8s/pv-sql.yaml'
-                sh 'kubectl apply -f k8s/pvc-sql.yaml'
-                sh 'kubectl apply -f k8s/deploy-sql.yaml'
-                sh 'kubectl apply -f k8s/service-sql.yaml'
-                sh 'kubectl apply -f k8s/configmap-spring.yaml'
-                sh 'kubectl apply -f k8s/secret-spring.yaml'
-                sh 'kubectl apply -f k8s/deploy-spring.yaml'
-                sh 'kubectl apply -f k8s/service-spring.yaml'
+                sh 'kubectl apply -f pv-sql.yaml'
+                sh 'kubectl apply -f pvc-sql.yaml'
+                sh 'kubectl apply -f deploy-sql.yaml'
+                sh 'kubectl apply -f service-sql.yaml'
+                sh 'kubectl apply -f configmap-spring.yaml'
+                sh 'kubectl apply -f secret-spring.yaml'
+                sh 'kubectl apply -f deploy-spring.yaml'
+                sh 'kubectl apply -f service-spring.yaml'
             }
         }
         stage('Deploy MySQL & Spring Boot on K8s') {
